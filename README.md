@@ -1,6 +1,6 @@
 # 🎓 Student Performance Predictor
 
-An end-to-end machine learning project that predicts a student's **Math score** from demographic and academic inputs such as gender, parental education, lunch type, test preparation and reading/writing scores. The trained model is served through both a **Flask** web app and a **Streamlit** app, and the repo includes configuration for deployment on **AWS Elastic Beanstalk**.
+An end-to-end machine learning project that predicts a student's **Math score** from demographic and academic inputs such as gender, parental education, lunch type, test preparation and reading/writing scores. The trained model is served through both a **Flask** web app and a **Streamlit** app, and the repo includes configuration for deployment on **Streamlit**.
 
 🚀 **Live Demo:** [https://student-performance--predictor.streamlit.app/](https://student-performance--predictor.streamlit.app/)
 
