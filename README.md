@@ -2,6 +2,8 @@
 
 An end-to-end machine learning project that predicts a student's **Math score** from demographic and academic inputs such as gender, parental education, lunch type, test preparation and reading/writing scores. The trained model is served through both a **Flask** web app and a **Streamlit** app, and the repo includes configuration for deployment on **AWS Elastic Beanstalk**.
 
+🚀 **Live Demo:** [https://student-performance--predictor.streamlit.app/](https://student-performance--predictor.streamlit.app/)
+
 ---
 
 ## 📌 Table of Contents
@@ -11,6 +13,7 @@ An end-to-end machine learning project that predicts a student's **Math score** 
 - [Project Structure](#-project-structure)
 - [Dataset & Input Features](#-dataset--input-features)
 - [ML Workflow](#-ml-workflow)
+- [Live Demo](#-live-demo)
 - [Installation](#-installation)
 - [Running the Apps](#-running-the-apps)
 - [Deployment](#-deployment)
@@ -35,6 +38,7 @@ Understanding which factors influence exam performance can help educators spot s
 - 🤖 Multiple regression models compared (scikit-learn, CatBoost, XGBoost)
 - 📝 Logging of pipeline runs in `logs/`
 - ☁️ AWS Elastic Beanstalk deployment config included
+- 🌍 Streamlit app deployed live on Streamlit Community Cloud
 
 ---
 
@@ -47,7 +51,7 @@ Understanding which factors influence exam performance can help educators spot s
 | Machine learning | Scikit-learn, CatBoost, XGBoost |
 | Web frameworks | Flask, Streamlit |
 | Serialization | Dill |
-| Deployment | AWS Elastic Beanstalk |
+| Deployment | Streamlit |
 
 ---
 
@@ -98,6 +102,16 @@ The model uses the student exam performance dataset. The prediction form takes:
 3. **Model training** – train and compare several regressors, then select the best performer on the test set.
 4. **Persistence** – save the best model and the preprocessor to `artifacts/`.
 5. **Prediction pipeline** – `CustomData` converts user input into a DataFrame, and `PredictPipeline` loads the saved artifacts and returns the predicted score.
+
+---
+
+## 🚀 Live Demo
+
+Try the app without installing anything: **[https://student-performance--predictor.streamlit.app/](https://student-performance--predictor.streamlit.app/)**
+
+Select the student's details, enter the reading and writing scores, and click **Predict your Maths Score**.
+
+> ℹ️ Free Streamlit apps go to sleep after a period of inactivity. If you see a "wake up" screen, click the button and wait a few seconds.
 
 ---
 
