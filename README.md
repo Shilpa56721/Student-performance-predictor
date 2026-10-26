@@ -37,7 +37,6 @@ Understanding which factors influence exam performance can help educators spot s
 - 📊 **Streamlit** interface (`streamapp.py`) with input validation
 - 🤖 Multiple regression models compared (scikit-learn, CatBoost, XGBoost)
 - 📝 Logging of pipeline runs in `logs/`
-- ☁️ AWS Elastic Beanstalk deployment config included
 - 🌍 Streamlit app deployed live on Streamlit Community Cloud
 
 ---
