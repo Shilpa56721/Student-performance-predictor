@@ -1,23 +1,23 @@
 # 🎓 Student Performance Predictor
 
-An end-to-end machine learning project that predicts a student's **Math score** from demographic and academic inputs such as gender, parental education, lunch type, test preparation and reading/writing scores. The trained model is served through both a **Flask** web app and a **Streamlit** app, and the repo includes configuration for deployment on **Streamlit**.
+An end-to-end machine learning project that predicts a student's **Math score** using demographic and academic inputs such as gender, parental education, lunch type, test preparation, and reading and writing scores. The project uses four regression algorithms and provides an interactive web application deployed on **Streamlit Community Cloud**.
 
-🚀 **Live Demo:** [https://student-performance--predictor.streamlit.app/](https://student-performance--predictor.streamlit.app/)
+🚀 **Live Demo:** [Student Performance Predictor](https://student-performance--predictor.streamlit.app/)
 
 ---
 
 ## 📌 Table of Contents
+
 - [Overview](#-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
 - [Dataset & Input Features](#-dataset--input-features)
 - [ML Workflow](#-ml-workflow)
-- [Live Demo](#-live-demo)
+- [Model Evaluation](#-model-evaluation)
 - [Installation](#-installation)
-- [Running the Apps](#-running-the-apps)
+- [Running the App](#-running-the-app)
 - [Deployment](#-deployment)
-- [Screenshots](#-screenshots)
 - [Future Improvements](#-future-improvements)
 - [Author](#-author)
 
@@ -25,19 +25,22 @@ An end-to-end machine learning project that predicts a student's **Math score** 
 
 ## 📖 Overview
 
-Understanding which factors influence exam performance can help educators spot students who may need extra support. This project builds a regression model that takes seven student attributes and returns a predicted **Math score**. It follows a modular ML pipeline structure (data ingestion → transformation → model training → prediction) with custom logging, so it is easy to extend and maintain.
+This project predicts a student's Math score based on seven demographic and academic features. It follows a modular machine learning workflow covering data ingestion, preprocessing, model training, evaluation, and prediction.
+
+The trained model and preprocessing pipeline are saved for reuse, and predictions are delivered through an interactive Streamlit application.
 
 ---
 
 ## ✨ Features
 
-- 🔮 Predicts Math score from 7 input features
-- 🧱 Modular, production-style pipeline under `src/`
-- 🌐 **Flask** web interface (`app.py`)
-- 📊 **Streamlit** interface (`streamapp.py`) with input validation
-- 🤖 Multiple regression models compared (scikit-learn, CatBoost, XGBoost)
-- 📝 Logging of pipeline runs in `logs/`
-- 🌍 Streamlit app deployed live on Streamlit Community Cloud
+- Predicts Math scores using seven input features.
+- Modular machine learning pipeline under `src/`.
+- Implements four regression algorithms.
+- Handles missing values, categorical encoding, and numerical scaling.
+- Saves the trained model and preprocessor for reuse.
+- Maintains logs of pipeline execution.
+- Interactive web interface built with Streamlit.
+- Deployed on Streamlit Community Cloud.
 
 ---
 
@@ -45,32 +48,30 @@ Understanding which factors influence exam performance can help educators spot s
 
 | Area | Tools |
 |---|---|
-| Language | Python |
-| Data & analysis | Pandas, NumPy, Seaborn, Matplotlib |
-| Machine learning | Scikit-learn, CatBoost, XGBoost |
-| Web frameworks | Flask, Streamlit |
-| Serialization | Dill |
-| Deployment | Streamlit |
+| Programming Language | Python |
+| Data Processing | Pandas, NumPy |
+| Data Visualization | Matplotlib, Seaborn |
+| Machine Learning | Scikit-learn, XGBoost |
+| Web Framework | Streamlit |
+| Model Serialization | Dill |
+| Deployment | Streamlit Community Cloud |
 
 ---
 
 ## 📂 Project Structure
 
-```
+```text
 Student-performance-predictor/
-├── .ebextensions/        # AWS Elastic Beanstalk configuration
-├── artifacts/            # Saved model, preprocessor and datasets
-├── catboost_info/        # CatBoost training logs
-├── logs/                 # Application and pipeline logs
-├── notebook/             # EDA and model training notebooks
-├── src/                  # Source code (components, pipeline, utils)
-│   └── pipeline/
-│       └── predict_pipeline.py   # CustomData + PredictPipeline classes
-├── templates/            # HTML templates for the Flask app (index.html, home.html)
-├── app.py                # Flask application
-├── streamapp.py          # Streamlit application
-├── python.config         # Deployment config
-├── requirements.txt      # Python dependencies
+├── artifacts/                  # Saved model, preprocessor and datasets
+├── logs/                       # Pipeline execution logs
+├── notebook/                   # EDA and model training notebooks
+├── src/                        # ML components and utilities
+│   ├── components/             # Data ingestion, transformation and training
+│   ├── pipeline/
+│   │   └── predict_pipeline.py # Prediction pipeline
+│   └── utils.py                # Helper functions
+├── streamapp.py                # Streamlit application
+├── requirements.txt            # Python dependencies
 └── .gitignore
 ```
 
@@ -78,114 +79,130 @@ Student-performance-predictor/
 
 ## 🗃️ Dataset & Input Features
 
-The model uses the student exam performance dataset. The prediction form takes:
+The project uses a student exam performance dataset with the following input features:
 
 | Feature | Type | Values |
 |---|---|---|
-| `gender` | Categorical | male, female |
-| `race_ethnicity` | Categorical | group A – group E |
-| `parental_level_of_education` | Categorical | some high school, high school, some college, associate's degree, bachelor's degree, master's degree |
-| `lunch` | Categorical | standard, free/reduced |
-| `test_preparation_course` | Categorical | none, completed |
-| `reading_score` | Numeric | 0 – 100 |
-| `writing_score` | Numeric | 0 – 100 |
+| `gender` | Categorical | Male, female |
+| `race_ethnicity` | Categorical | Group A – Group E |
+| `parental_level_of_education` | Categorical | Some high school, high school, some college, associate's degree, bachelor's degree, master's degree |
+| `lunch` | Categorical | Standard, free/reduced |
+| `test_preparation_course` | Categorical | None, completed |
+| `reading_score` | Numeric | 0–100 |
+| `writing_score` | Numeric | 0–100 |
 
-**Target:** `math_score`
+**Target variable:** `math_score`
 
 ---
 
 ## 🔄 ML Workflow
 
-1. **Data ingestion** – load the dataset and split it into train and test sets.
-2. **Data transformation** – impute missing values, one-hot encode categorical features, and scale numerical features through a preprocessing pipeline.
-3. **Model training** – train and compare several regressors, then select the best performer on the test set.
-4. **Persistence** – save the best model and the preprocessor to `artifacts/`.
-5. **Prediction pipeline** – `CustomData` converts user input into a DataFrame, and `PredictPipeline` loads the saved artifacts and returns the predicted score.
+1. **Data Ingestion:** Load the dataset and split it into training and testing sets.
+2. **Data Transformation:** Handle missing values, encode categorical features using one-hot encoding, and scale numerical features through a preprocessing pipeline.
+3. **Model Training:** Train and compare the following regression algorithms:
+   - Linear Regression
+   - Decision Tree Regression
+   - Random Forest Regression
+   - XGBoost Regression
+4. **Model Evaluation:** Evaluate model performance using R², RMSE, and MAE.
+5. **Model Persistence:** Save the selected trained model and preprocessor in the `artifacts/` directory.
+6. **Prediction:** Process user inputs, load the saved artifacts, and generate the predicted Math score.
+7. **Deployment:** Run the application through Streamlit Community Cloud.
 
 ---
 
-## 🚀 Live Demo
+## 📈 Model Evaluation
 
-Try the app without installing anything: **[https://student-performance--predictor.streamlit.app/](https://student-performance--predictor.streamlit.app/)**
+The four regression algorithms are evaluated using the following metrics:
 
-Select the student's details, enter the reading and writing scores, and click **Predict your Maths Score**.
+- **R² Score:** Measures how much variation in Math scores is explained by the model.
+- **RMSE:** Measures prediction error while penalizing larger errors more heavily.
+- **MAE:** Measures the average absolute difference between actual and predicted scores.
 
-> ℹ️ Free Streamlit apps go to sleep after a period of inactivity. If you see a "wake up" screen, click the button and wait a few seconds.
+The best-performing model is selected based on the evaluation results.
 
 ---
 
 ## ⚙️ Installation
 
+### 1. Clone the repository
+
 ```bash
-# 1. Clone the repository
 git clone https://github.com/Shilpa56721/Student-performance-predictor.git
 cd Student-performance-predictor
+```
 
-# 2. Create and activate a virtual environment
+### 2. Create and activate a virtual environment
+
+```bash
 python -m venv venv
-source venv/bin/activate        # On Windows: venv\Scripts\activate
+```
 
-# 3. Install dependencies
+On Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+On macOS/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## ▶️ Running the Apps
+## ▶️ Running the App
 
-### Option 1: Flask app
-```bash
-python app.py
-```
-Open **http://127.0.0.1:5000/** in your browser, then go to `/predictdata` to enter student details and get a prediction.
+Run the following command to launch the Streamlit application locally:
 
-### Option 2: Streamlit app
 ```bash
 streamlit run streamapp.py
 ```
-Fill in all fields and click **Predict your Maths Score**.
 
-> ⚠️ Both apps load the trained model and preprocessor from `artifacts/`. If those files are missing, train the model first by running the training pipeline in `src/`.
+Open the local URL provided by Streamlit, usually `http://localhost:8501`.
+
+Enter the student's details and click **Predict your Maths Score** to obtain the prediction.
+
+> **Note:** The application requires the trained model and preprocessor files in the `artifacts/` directory. Train the model first if these files are missing.
 
 ---
 
 ## ☁️ Deployment
 
-The repo includes `.ebextensions/` and `python.config` for deploying the Flask app on **AWS Elastic Beanstalk**. In `app.py` the WSGI object is exposed as `application`, which is what Elastic Beanstalk expects.
+The application is hosted and deployed using **Streamlit Community Cloud**.
 
-Typical flow:
-```bash
-pip install awsebcli
-eb init
-eb create student-performance-env
-eb open
-```
-
----
-
-## 📸 Screenshots
-
-> *Add screenshots of the Flask form and Streamlit app here, for example:*
-> ```md
-> ![Flask App](images/flask_app.png)
-> ![Streamlit App](images/streamlit_app.png)
-> ```
+1. Push the project code to GitHub.
+2. Ensure `streamapp.py`, `requirements.txt`, and the required model artifacts are available.
+3. Visit [Streamlit Community Cloud](https://share.streamlit.io/).
+4. Connect your GitHub account and select the repository.
+5. Set `streamapp.py` as the main application file.
+6. Deploy the application and obtain the public URL.
 
 ---
 
 ## 🔮 Future Improvements
 
-- Add model performance metrics (R², RMSE) and comparison charts to this README
-- Add support for predicting reading and writing scores
-- Containerize with Docker
-- Add a CI/CD pipeline with GitHub Actions
-- Add unit tests for the pipeline
+- Add model performance comparison charts.
+- Display actual versus predicted scores.
+- Improve input validation and error handling.
+- Add unit tests for preprocessing and prediction.
+- Containerize the application with Docker.
+- Implement automated testing and deployment workflows.
+- Extend the application to predict reading and writing scores.
 
 ---
 
 ## 👩‍💻 Author
 
 **Shilpa**
+
 GitHub: [@Shilpa56721](https://github.com/Shilpa56721)
 
 ---
